@@ -4,6 +4,8 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+from .models import SuperMarket, Producer
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
     @classmethod
@@ -37,16 +39,51 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         return attrs
 
+class SuperMarketSerializer(RegisterSerializer):
+    class Meta:
+        model = SuperMarket
+        fields = ('password', 'password2', 'email', 'first_name', 'last_name',
+                  'phone_number', 'owner_phone_number', 'cnpj', 'cep', 
+                  'comercial_name',
+                 )
+
     def create(self, validated_data):
-        user = User.objects.create(
+
+        super_maket = SuperMarket.objects.create(
             username=validated_data['email'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
-            last_name=validated_data['last_name']
+            last_name=validated_data['last_name'],
+            phone_number = validated_data['phone_number'],
+            owner_phone_number = validated_data['owner_phone_number'],
+            cnpj = validated_data['cnpj'],
+            cep = validated_data['cep'],
+            comercial_name = validated_data['comercial_name'],
         )
 
-        
-        user.set_password(validated_data['password'])
-        user.save()
+        super_maket.set_password(validated_data['password'])
+        super_maket.save()
 
-        return user
+        return super_maket
+
+class ProducerSerializer(RegisterSerializer):
+    class Meta:
+        model = SuperMarket
+        fields = ('password', 'password2', 'email', 'first_name', 'last_name',
+                  'phone_number',
+                 )
+
+    def create(self, validated_data):
+
+        producer = SuperMarket.objects.create(
+            username=validated_data['email'],
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            phone_number = validated_data['phone_number'],
+        )
+
+        producer.set_password(validated_data['password'])
+        producer.save()
+
+        return producer
