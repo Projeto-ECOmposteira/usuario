@@ -9,6 +9,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer, RegisterSerializer, \
                          SuperMarketSerializer, ProducerSerializer
 
+from .models import SuperMarket
+
 
 class UserView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -20,6 +22,17 @@ class UserView(APIView):
 class CustomObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)
     serializer_class = CustomTokenObtainPairSerializer
+
+    def post(self, request):
+        response = super().post(request)
+        user = User.objects.get(username=request.data['username'])
+        isSupermarket = SuperMarket.objects.filter(username=request.data['username']).count()
+        response.data['user'] = {
+            'name': user.first_name + ' ' + user.last_name,
+            'email': user.username,
+            'isSupermarket': True if isSupermarket == 1 else False
+        }
+        return response
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
