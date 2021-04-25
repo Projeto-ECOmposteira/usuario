@@ -1,5 +1,5 @@
-SECRET_KEY=SuaSecretKey
-DEBUG=False
+SECRET_KEY=idwyws0acmgpqw%t*1k12t8!luo*tx=_@miz6=8#30s7&ye*$p
+DEBUG=True
 ALLOWED_HOSTS=*
 ENVIRONMENT=DEVELOPMENT
 POSTGRES_DB=postgres
