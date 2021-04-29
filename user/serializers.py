@@ -71,7 +71,7 @@ class ProducerSerializer(RegisterSerializer):
     class Meta:
         model = Producer
         fields = ('password', 'password2', 'email', 'first_name', 'last_name',
-                  'phone_number',
+                  'phone_number', 'pk',
                  )
 
     def create(self, validated_data):
