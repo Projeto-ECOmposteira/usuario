@@ -68,7 +68,7 @@ ROOT_URLCONF = 'user_microservice.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,6 +77,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'get_domain_link': 'user_microservice.templatetags.poll_extras',
+            }
         },
     },
 ]
@@ -149,3 +152,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+if (ENVIRONMENT == 'PRODUCTION'):
+    # Email settings
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST')
+    EMAIL_PORT = config('EMAIL_PORT')
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = True
+    EMAIL_USE_SSL = False
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
