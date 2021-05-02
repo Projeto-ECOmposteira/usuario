@@ -37,6 +37,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
 
+        try:
+            if attrs['first_name'] == "":
+                raise serializers.ValidationError({"first_name": "This field is required."})
+        except Exception:
+            raise serializers.ValidationError({"first_name": "This field is required."})
+
+        try:
+            if attrs['last_name'] == "":
+                raise serializers.ValidationError({"last_name": "This field is required."})
+        except Exception:
+            raise serializers.ValidationError({"last_name": "This field is required."})
+
         return attrs
 
 class SuperMarketSerializer(RegisterSerializer):
