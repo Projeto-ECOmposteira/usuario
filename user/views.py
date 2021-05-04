@@ -1,15 +1,16 @@
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .serializers import CustomTokenObtainPairSerializer, RegisterSerializer, \
                          SuperMarketSerializer, ProducerSerializer
 
-from .models import SuperMarket
+from .models import SuperMarket, Producer
 
 
 class UserView(APIView):
@@ -46,5 +47,18 @@ class RegisterSuperMarketView(generics.CreateAPIView):
 
 class RegisterProducerView(generics.CreateAPIView):
     queryset = User.objects.all()
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAdminUser,)
     serializer_class = ProducerSerializer
+
+class ProducerViewSet(viewsets.ViewSet):
+    def list(self, request):
+        queryset = Producer.objects.all()
+        serializer = ProducerSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+    def retrieve(self, request, pk=None):
+        queryset = Producer.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = ProducerSerializer(user)
+        return Response(serializer.data)

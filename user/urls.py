@@ -1,8 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from user.views import CustomObtainTokenPairView, RegisterView, UserView, \
-                       RegisterSuperMarketView, RegisterProducerView
+                       RegisterSuperMarketView, RegisterProducerView, \
+                       ProducerViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'producers', ProducerViewSet, basename='producer')
 
 urlpatterns = [
     path('login/', CustomObtainTokenPairView.as_view(), name='token_obtain_pair'),
@@ -16,4 +21,5 @@ urlpatterns = [
     path('password_recovery/reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     path('', UserView.as_view(), name='auth_register'),
+    path('', include(router.urls)),
 ]

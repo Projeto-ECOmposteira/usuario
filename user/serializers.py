@@ -37,6 +37,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
 
+        try:
+            if attrs['first_name'] == "":
+                raise serializers.ValidationError({"first_name": "This field is required."})
+        except Exception:
+            raise serializers.ValidationError({"first_name": "This field is required."})
+
+        try:
+            if attrs['last_name'] == "":
+                raise serializers.ValidationError({"last_name": "This field is required."})
+        except Exception:
+            raise serializers.ValidationError({"last_name": "This field is required."})
+
         return attrs
 
 class SuperMarketSerializer(RegisterSerializer):
@@ -44,11 +56,11 @@ class SuperMarketSerializer(RegisterSerializer):
         model = SuperMarket
         fields = ('password', 'password2', 'email', 'first_name', 'last_name',
                   'phone_number', 'owner_phone_number', 'cnpj', 'cep', 
-                  'comercial_name',
+                  'comercial_name', 'agricultural_producer'
                  )
-
+                 
     def create(self, validated_data):
-
+        agricultural_producer = Producer.objects.get(pk=validated_data['agricultural_producer'])
         super_maket = SuperMarket.objects.create(
             username=validated_data['email'],
             email=validated_data['email'],
@@ -59,6 +71,7 @@ class SuperMarketSerializer(RegisterSerializer):
             cnpj = validated_data['cnpj'],
             cep = validated_data['cep'],
             comercial_name = validated_data['comercial_name'],
+            agricultural_producer = agricultural_producer,
         )
 
         super_maket.set_password(validated_data['password'])
@@ -68,14 +81,14 @@ class SuperMarketSerializer(RegisterSerializer):
 
 class ProducerSerializer(RegisterSerializer):
     class Meta:
-        model = SuperMarket
+        model = Producer
         fields = ('password', 'password2', 'email', 'first_name', 'last_name',
-                  'phone_number',
+                  'phone_number', 'pk',
                  )
 
     def create(self, validated_data):
 
-        producer = SuperMarket.objects.create(
+        producer = Producer.objects.create(
             username=validated_data['email'],
             email=validated_data['email'],
             first_name=validated_data['first_name'],
