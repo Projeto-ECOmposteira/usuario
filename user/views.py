@@ -47,7 +47,7 @@ class RegisterSuperMarketView(generics.CreateAPIView):
 
 class RegisterProducerView(generics.CreateAPIView):
     queryset = User.objects.all()
-    permission_classes = (IsAdminUser,)
+    permission_classes = (AllowAny,)
     serializer_class = ProducerSerializer
 
 class ProducerViewSet(viewsets.ViewSet):
