@@ -11,7 +11,14 @@ from .serializers import CustomTokenObtainPairSerializer, RegisterSerializer, \
                          SuperMarketSerializer, ProducerSerializer
 
 from .models import SuperMarket, Producer
-
+from rest_framework.decorators import api_view
+import jwt
+from django.conf import settings
+import json
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_400_BAD_REQUEST
+)
 
 class UserView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -62,3 +69,20 @@ class ProducerViewSet(viewsets.ViewSet):
         user = get_object_or_404(queryset, pk=pk)
         serializer = ProducerSerializer(user)
         return Response(serializer.data)
+
+@api_view(["GET"])
+def get_producer_supermarket(request):
+    try:
+        user_id = get_user_id_by_token(request.headers['Authorization'].replace('Baerer ', ''))
+        response_data = SuperMarketSerializer(SuperMarket.objects.filter(agricultural_producer = user_id), many=True).data
+        return Response(
+            response_data,
+            status=HTTP_200_OK
+        )
+    except:
+        return Response(
+            status=HTTP_400_BAD_REQUEST
+        )
+
+def get_user_id_by_token(token):
+    return jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])['user_id']
