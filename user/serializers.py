@@ -54,7 +54,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 class SuperMarketSerializer(RegisterSerializer):
     class Meta:
         model = SuperMarket
-        fields = ('password', 'password2', 'email', 'first_name', 'last_name',
+        fields = ('pk', 'password', 'password2', 'email', 'first_name', 'last_name',
                   'phone_number', 'owner_phone_number', 'cnpj', 'cep', 
                   'comercial_name', 'agricultural_producer'
                  )
