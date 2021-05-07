@@ -1,13 +1,15 @@
 from django.urls import path, include
 from user.views import CustomObtainTokenPairView, RegisterView, UserView, \
                        RegisterSuperMarketView, RegisterProducerView, \
-                       ProducerViewSet, get_producer_supermarket
+                       ProducerViewSet, get_producer_supermarket, \
+                       SuperMarketViewSet
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 router.register(r'producers', ProducerViewSet, basename='producer')
+router.register(r'supermarkets', SuperMarketViewSet, basename='supermarkets')
 
 urlpatterns = [
     path('login/', CustomObtainTokenPairView.as_view(), name='token_obtain_pair'),
