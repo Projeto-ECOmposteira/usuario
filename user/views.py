@@ -73,6 +73,21 @@ class ProducerViewSet(viewsets.ViewSet):
         serializer = ProducerSerializer(user)
         return Response(serializer.data)
 
+class SuperMarketViewSet(viewsets.ViewSet):
+    def list(self, request):
+        queryset = SuperMarket.objects.all()
+        serializer = SuperMarketSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = SuperMarket.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = SuperMarketSerializer(user)
+        data=serializer.data
+        agricultural_producer = Producer.objects.get(pk=data['agricultural_producer'])
+        data['agricultural_producer'] = ProducerSerializer(agricultural_producer).data
+        return Response(data)
+
 @api_view(["GET"])
 def get_producer_supermarket(request):
     try:
