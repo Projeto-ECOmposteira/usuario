@@ -24,7 +24,9 @@ class UserView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        content = {'status': 'User is corretly authenticated'}
+        token = request.headers['Authorization'].replace('Bearer ', '')
+        user_data = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+        content = {'status': 'User is corretly authenticated', **user_data}
         return Response(content)
 
 class CustomObtainTokenPairView(TokenObtainPairView):
@@ -38,6 +40,7 @@ class CustomObtainTokenPairView(TokenObtainPairView):
         response.data['user'] = {
             'name': user.first_name + ' ' + user.last_name,
             'email': user.username,
+            'pk': user.pk,
             'isSupermarket': True if isSupermarket == 1 else False
         }
         return response
@@ -73,7 +76,7 @@ class ProducerViewSet(viewsets.ViewSet):
 @api_view(["GET"])
 def get_producer_supermarket(request):
     try:
-        user_id = get_user_id_by_token(request.headers['Authorization'].replace('Baerer ', ''))
+        user_id = get_user_id_by_token(request.headers['Authorization'].replace('Bearer ', ''))
         response_data = SuperMarketSerializer(SuperMarket.objects.filter(agricultural_producer = user_id), many=True).data
         return Response(
             response_data,
