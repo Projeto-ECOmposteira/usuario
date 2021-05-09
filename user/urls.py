@@ -2,7 +2,7 @@ from django.urls import path, include
 from user.views import CustomObtainTokenPairView, RegisterView, UserView, \
                        RegisterSuperMarketView, RegisterProducerView, \
                        ProducerViewSet, get_producer_supermarket, \
-                       SuperMarketViewSet
+                       SuperMarketViewSet, get_user_pk
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.contrib.auth.views import PasswordResetView,PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from rest_framework.routers import DefaultRouter
@@ -18,6 +18,8 @@ urlpatterns = [
     path('register_producer/', RegisterProducerView.as_view(), name='register_producer'),
 
     path('get_producer_supermarket/', get_producer_supermarket, name='get_producer_supermarket'),
+
+    path('get_user_pk/', get_user_pk, name='get_user_pk'),
 
     path('password_recovery/', PasswordResetView.as_view(), name='password_reset'),
     path('password_recovery/done/', PasswordResetDoneView.as_view(), name='password_reset_done'),

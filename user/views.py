@@ -92,9 +92,29 @@ class SuperMarketViewSet(viewsets.ViewSet):
 def get_producer_supermarket(request):
     try:
         user_id = get_user_id_by_token(request.headers['Authorization'].replace('Bearer ', ''))
-        response_data = SuperMarketSerializer(SuperMarket.objects.filter(agricultural_producer = user_id), many=True).data
+        try:
+            supermarket = SuperMarket.objects.get(id = user_id)
+            response_data = [SuperMarketSerializer(supermarket).data]
+        except:
+            response_data = SuperMarketSerializer(SuperMarket.objects.filter(agricultural_producer = user_id), many=True).data
         return Response(
             response_data,
+            status=HTTP_200_OK
+        )
+    except:
+        return Response(
+            status=HTTP_400_BAD_REQUEST
+        )
+
+@api_view(["GET"])
+def get_user_pk(request):
+    try:
+        user_id = get_user_id_by_token(request.headers['Authorization'].replace('Bearer ', ''))
+        data = {
+            'pk': user_id
+        }
+        return Response(
+            user_id,
             status=HTTP_200_OK
         )
     except:
