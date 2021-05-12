@@ -14,7 +14,7 @@
 
 O presente microsserviço disponibiliza informações relativas aos usuários, produtores agrícolas e supermercados. Nesse sentido, fornece meios para realizar login, cadastro e demais recursos pertinentes aos dados do usuário na plataforma.
 
-## Rode o Backend com Docker
+## Execute o Backend com Docker
 
 ### Dependências
 
